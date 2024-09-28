@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <script src="https://cesiumjs.org/releases/1.54/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesiumjs.org/releases/1.54/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+</head>
+<body>
+<div id="cesiumContainer" style="width: 700px; height:400px"></div>
+<script>
+    Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIxNTAyYzE1OC01OWY5LTQ1MmMtOTVlYS0xYmFlODMyNTQzODciLCJpZCI6OTg3NzAsImlhdCI6MTY1NTk4Nzk3N30.bmFlhaxYAHeknbWqgspoPkp2u0UCcdANNP34oMOa-Zw';
+    var viewer = new Cesium.Viewer('cesiumContainer',{
+        animation:false,    //左下角的动画仪表盘
+        baseLayerPicker:true,  //右上角的图层选择按钮
+        geocoder:false,  //搜索框
+        homeButton:false,  //home按钮
+        sceneModePicker:false, //模式切换按钮
+        timeline:false,    //底部的时间轴
+        navigationHelpButton:false,  //右上角的帮助按钮，
+        fullscreenButton:false   //右下角的全屏按钮
+    });
+    viewer._cesiumWidget._creditContainer.style.display="none";  //删除版权信息
+
+//聚焦河海校区，设置高度
+    let initialPosition = new Cesium.Cartesian3.fromDegrees(118.781, 31.916, 3000);
+    let homeCameraView = {
+        destination: initialPosition,
+    };
+    viewer.scene.camera.setView(homeCameraView);
+
+    // viewer.homeButton.viewModel.command.beforeExecute.addEventListener(function(e) {
+    //     e.cancel = true;
+    //     viewer.scene.camera.flyTo(homeCameraView);
+    // });
+
+//修改默认图层为OSM
+    viewer.baseLayerPicker.viewModel.selectedImagery=viewer.baseLayerPicker.viewModel.imageryProviderViewModels[9];
+
+    var terrainLayer = new Cesium.CesiumTerrainProvider({
+        url:'http://localhost:8080/HHUTerrain'
+        });
+    viewer.terrainProvider = terrainLayer;
+
+</script>
+</body>
+</html>
